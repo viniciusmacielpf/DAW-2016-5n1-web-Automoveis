@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Bem vindo ao sistema</ui:define>
+        <ui:define name="conteudo">
+            <h:form id="formListagem">
+                <p:growl id="growl" />
+                <p:commandButton value="Novo" actionListener="#{controleProduto.novo()}"
+                                 oncomplete="PF('dlg').show();" update=":formEdicao" />
+                <div align="center">
+                    <p:panelGrid columns="11">
+                        <p:outputLabel value="Ordem:"/>
+                        <p:selectOneMenu value="#{controleProduto.dao.ordem}">
+                            <f:selectItem itemLabel="ID" itemValue="id"/>
+                            <f:selectItem itemLabel="Nome" itemValue="nome"/>
+                            <f:selectItem itemLabel="Estado" itemValue="estado.nome" />
+                            <p:ajax  update="listagem"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Filtro"/>
+                        <p:inputText value="#{controleProduto.dao.filtro}" >
+                            <p:ajax event="blur" update="listagem growl"/>
+                        </p:inputText>
+                        <p:commandButton value="Filtrar" update="listagem"/>
+                        <p:outputLabel value="Maximo de objetos :" />
+                        <p:inputText value="#{controleProduto.dao.maximoObjeto}">
+                            <p:ajax event="keyup" update="listagem" />
+                        </p:inputText>
+                        <p:commandButton value="Primeiro" actionListener="#{controleProduto.dao.primeiro()}" update="listagem" />
+                        <p:commandButton value="Anterior" actionListener="#{controleProduto.dao.anterior()}" update="listagem" />
+                        <p:commandButton value="Próximo" actionListener="#{controleProduto.dao.proxima()}" update="listagem" />
+                        <p:commandButton value="Último" actionListener="#{controleProduto.dao.ultimo()}" update="listagem" />
+                    </p:panelGrid>
+                </div>
+                <p:dataTable value="#{controleProduto.dao.listaObjetos}" var="obj" id="listagem" emptyMessage="Sem registros">
+                    <f:facet name="footer">
+                        <div align="center">
+                            <p:outputLabel value="#{controleProduto.dao.mensagemNavegacao}" />
+                        </div>
+                    </f:facet>
+                    <p:column headerText="Id">
+
+                        <h:outputText value="#{obj.id}"/>
+                    </p:column>
+                    <p:column headerText="Nome">
+
+                        <h:outputText value="#{obj.nome}"/>
+                    </p:column>
+                    <p:column headerText="Descrição">
+
+                        <h:outputText value="#{obj.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Preço">
+
+                        <h:outputText value="#{obj.preco}" >
+                            <f:convertNumber pattern="R$ 0.00" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Estoque">
+
+                        <h:outputText value="#{obj.estoque}"/>
+                    </p:column>
+                    <p:column headerText="Marca">
+
+                        <h:outputText value="#{obj.marca.nome}"/>
+                    </p:column>
+                     <p:column headerText="Grupo">
+
+                        <h:outputText value="#{obj.grupo.nome}"/>
+                    </p:column>
+                    <p:column headerText="Ações">
+                        <div align="center">
+                            <p:commandButton id="btnAlterar" icon="ui-icon-pencil" actionListener="#{controleProduto.editar(obj.id)}" 
+                                             oncomplete="PF('dlg').show();" update=":formEdicao"  />
+                            <p:commandButton id="btnRemover"  icon="ui-icon-trash" onclick="if (!confirm('Confirma a exclusão?'))
+                                        return false" actionListener="#{controleProduto.remover(obj.id)}" update="@form" process="@form"/>
+                            <p:tooltip for="btnAlterar" value="Alterar" />
+                            <p:tooltip for="btnRemover" value="Remover" />
+                        </div> 
+                    </p:column>
+
+
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+        <ui:define name="dialogos">
+            <p:dialog widgetVar="dlg" header="Edição" modal="true" resizable="false">
+                <h:form id="formEdicao">
+                    <p:growl />
+                    <div align="center">
+                        <p:panelGrid columns="2">
+                            <f:facet name="footer">
+                                <p:commandButton value="Salvar" actionListener="#{controleProduto.salvar()}" 
+                                                 oncomplete="if(!args.validationFailed){
+                                                 PF('dlg').hide();}" update=":formEdicao :formListagem" />
+                            </f:facet>
+                            <p:outputLabel value="ID" />
+                            <p:inputText value="#{controleProduto.obj.id}" />
+                            <p:outputLabel value="Nome" />
+                            <p:inputText id="ttNome"  value="#{controleProduto.obj.nome}" 
+                                         size="40" maxlength="40" placeholder="Obrigatório" />                            
+                            
+                            <p:outputLabel value="Preco" />
+                            <p:inputText id="ttPreco"  value="#{controleProduto.obj.preco}" 
+                                         size="40" maxlength="40" placeholder="Obrigatório" />  
+                            
+                            <p:outputLabel value="Estoque" />
+                            <p:inputText id="ttEstoque"  value="#{controleProduto.obj.estoque}" 
+                                         size="40" maxlength="40" placeholder="Obrigatório" >
+                                
+                            </p:inputText> 
+                            
+                            <p:outputLabel value="Descrição" />
+                            <p:inputText id="ttDescricao"  value="#{controleProduto.obj.descricao}" 
+                                         size="40" maxlength="40" placeholder="Obrigatório" />  
+                            <p:outputLabel value="Marca" for="selectMarca"/>
+                            <p:selectOneMenu id="selectMarca" value="#{controleProduto.obj.marca}" >
+                                <f:converter converterId="converterMarca" />
+                                <f:selectItem itemLabel="Selecione um registro" noSelectionOption="true" />
+                                <f:selectItems value="#{controleProduto.daoMarca.listaTodos}" 
+                                               var="e" itemLabel="#{e.nome}" />              
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Grupo" for="selectGrupo"/>
+                            <p:selectOneMenu id="selectGrupo" value="#{controleProduto.obj.grupo}" >
+                                <f:converter converterId="converterGrupo" />
+                                <f:selectItem itemLabel="Selecione um registro" noSelectionOption="true" />
+                                <f:selectItems value="#{controleProduto.daoGrupo.listaTodos}" 
+                                               var="e" itemLabel="#{e.nome}" />              
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+
+                    </div>
+                </h:form>
+                <ui:include src="/templates/ajaxstatus.xhtml" />
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+
+</html>
+
