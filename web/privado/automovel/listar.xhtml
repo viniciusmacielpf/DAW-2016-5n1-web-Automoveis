@@ -10,74 +10,68 @@
         <ui:define name="conteudo">
             <h:form id="formListagem">
                 <p:growl id="growl" />
-                <p:commandButton value="Novo" actionListener="#{controleProduto.novo()}"
+                <p:commandButton value="Novo" actionListener="#{controleAutomovel.novo()}"
                                  oncomplete="PF('dlg').show();" update=":formEdicao" />
                 <div align="center">
                     <p:panelGrid columns="11">
                         <p:outputLabel value="Ordem:"/>
-                        <p:selectOneMenu value="#{controleProduto.dao.ordem}">
+                        <p:selectOneMenu value="#{controleAutomovel.dao.ordem}">
                             <f:selectItem itemLabel="ID" itemValue="id"/>
                             <f:selectItem itemLabel="Nome" itemValue="nome"/>
                             <f:selectItem itemLabel="Estado" itemValue="estado.nome" />
                             <p:ajax  update="listagem"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="Filtro"/>
-                        <p:inputText value="#{controleProduto.dao.filtro}" >
+                        <p:inputText value="#{controleAutomovel.dao.filtro}" >
                             <p:ajax event="blur" update="listagem growl"/>
                         </p:inputText>
                         <p:commandButton value="Filtrar" update="listagem"/>
                         <p:outputLabel value="Maximo de objetos :" />
-                        <p:inputText value="#{controleProduto.dao.maximoObjeto}">
+                        <p:inputText value="#{controleAutomovel.dao.maximoObjeto}">
                             <p:ajax event="keyup" update="listagem" />
                         </p:inputText>
-                        <p:commandButton value="Primeiro" actionListener="#{controleProduto.dao.primeiro()}" update="listagem" />
-                        <p:commandButton value="Anterior" actionListener="#{controleProduto.dao.anterior()}" update="listagem" />
-                        <p:commandButton value="Próximo" actionListener="#{controleProduto.dao.proxima()}" update="listagem" />
-                        <p:commandButton value="Último" actionListener="#{controleProduto.dao.ultimo()}" update="listagem" />
+                        <p:commandButton value="Primeiro" actionListener="#{controleAutomovel.dao.primeiro()}" update="listagem" />
+                        <p:commandButton value="Anterior" actionListener="#{controleAutomovel.dao.anterior()}" update="listagem" />
+                        <p:commandButton value="Próximo" actionListener="#{controleAutomovel.dao.proxima()}" update="listagem" />
+                        <p:commandButton value="Último" actionListener="#{controleAutomovel.dao.ultimo()}" update="listagem" />
                     </p:panelGrid>
                 </div>
-                <p:dataTable value="#{controleProduto.dao.listaObjetos}" var="obj" id="listagem" emptyMessage="Sem registros">
+                <p:dataTable value="#{controleAutomovel.dao.listaObjetos}" var="obj" id="listagem" emptyMessage="Sem registros">
                     <f:facet name="footer">
                         <div align="center">
-                            <p:outputLabel value="#{controleProduto.dao.mensagemNavegacao}" />
+                            <p:outputLabel value="#{controleAutomovel.dao.mensagemNavegacao}" />
                         </div>
                     </f:facet>
                     <p:column headerText="Id">
 
                         <h:outputText value="#{obj.id}"/>
                     </p:column>
-                    <p:column headerText="Nome">
+                    <p:column headerText="Modelo">
 
-                        <h:outputText value="#{obj.nome}"/>
+                        <h:outputText value="#{obj.modelo}"/>
                     </p:column>
-                    <p:column headerText="Descrição">
+                    <p:column headerText="Ano">
 
-                        <h:outputText value="#{obj.descricao}"/>
+                        <h:outputText value="#{obj.ano}"/>
                     </p:column>
-                    <p:column headerText="Preço">
+                    <p:column headerText="KM">
 
-                        <h:outputText value="#{obj.preco}" >
-                            <f:convertNumber pattern="R$ 0.00" />
-                        </h:outputText>
+                        <h:outputText value="#{obj.quilometragem}"/>
                     </p:column>
-                    <p:column headerText="Estoque">
+                    <p:column headerText="Estado">
 
-                        <h:outputText value="#{obj.estoque}"/>
+                        <h:outputText value="#{obj.estadoAtual}"/>
                     </p:column>
                     <p:column headerText="Marca">
 
                         <h:outputText value="#{obj.marca.nome}"/>
                     </p:column>
-                     <p:column headerText="Grupo">
-
-                        <h:outputText value="#{obj.grupo.nome}"/>
-                    </p:column>
                     <p:column headerText="Ações">
                         <div align="center">
-                            <p:commandButton id="btnAlterar" icon="ui-icon-pencil" actionListener="#{controleProduto.editar(obj.id)}" 
+                            <p:commandButton id="btnAlterar" icon="ui-icon-pencil" actionListener="#{controleAutomovel.editar(obj.id)}" 
                                              oncomplete="PF('dlg').show();" update=":formEdicao"  />
                             <p:commandButton id="btnRemover"  icon="ui-icon-trash" onclick="if (!confirm('Confirma a exclusão?'))
-                                        return false" actionListener="#{controleProduto.remover(obj.id)}" update="@form" process="@form"/>
+                                        return false" actionListener="#{controleAutomovel.remover(obj.id)}" update="@form" process="@form"/>
                             <p:tooltip for="btnAlterar" value="Alterar" />
                             <p:tooltip for="btnRemover" value="Remover" />
                         </div> 
@@ -91,49 +85,163 @@
             <p:dialog widgetVar="dlg" header="Edição" modal="true" resizable="false">
                 <h:form id="formEdicao">
                     <p:growl />
-                    <div align="center">
-                        <p:panelGrid columns="2">
-                            <f:facet name="footer">
-                                <p:commandButton value="Salvar" actionListener="#{controleProduto.salvar()}" 
-                                                 oncomplete="if(!args.validationFailed){
-                                                 PF('dlg').hide();}" update=":formEdicao :formListagem" />
-                            </f:facet>
-                            <p:outputLabel value="ID" />
-                            <p:inputText value="#{controleProduto.obj.id}" />
-                            <p:outputLabel value="Nome" />
-                            <p:inputText id="ttNome"  value="#{controleProduto.obj.nome}" 
-                                         size="40" maxlength="40" placeholder="Obrigatório" />                            
-                            
-                            <p:outputLabel value="Preco" />
-                            <p:inputText id="ttPreco"  value="#{controleProduto.obj.preco}" 
-                                         size="40" maxlength="40" placeholder="Obrigatório" />  
-                            
-                            <p:outputLabel value="Estoque" />
-                            <p:inputText id="ttEstoque"  value="#{controleProduto.obj.estoque}" 
-                                         size="40" maxlength="40" placeholder="Obrigatório" >
-                                
-                            </p:inputText> 
-                            
-                            <p:outputLabel value="Descrição" />
-                            <p:inputText id="ttDescricao"  value="#{controleProduto.obj.descricao}" 
-                                         size="40" maxlength="40" placeholder="Obrigatório" />  
-                            <p:outputLabel value="Marca" for="selectMarca"/>
-                            <p:selectOneMenu id="selectMarca" value="#{controleProduto.obj.marca}" >
-                                <f:converter converterId="converterMarca" />
-                                <f:selectItem itemLabel="Selecione um registro" noSelectionOption="true" />
-                                <f:selectItems value="#{controleProduto.daoMarca.listaTodos}" 
-                                               var="e" itemLabel="#{e.nome}" />              
-                            </p:selectOneMenu>
-                            <p:outputLabel value="Grupo" for="selectGrupo"/>
-                            <p:selectOneMenu id="selectGrupo" value="#{controleProduto.obj.grupo}" >
-                                <f:converter converterId="converterGrupo" />
-                                <f:selectItem itemLabel="Selecione um registro" noSelectionOption="true" />
-                                <f:selectItems value="#{controleProduto.daoGrupo.listaTodos}" 
-                                               var="e" itemLabel="#{e.nome}" />              
-                            </p:selectOneMenu>
-                        </p:panelGrid>
+                    <p:tabView id="tab">
+                    <p:tab title="Dados Automovel" >
 
-                    </div>
+                        <div align="center">
+                            <p:panelGrid columns="2">
+                                <f:facet name="footer">
+                                    <p:commandButton value="Salvar" actionListener="#{controleAutomovel.salvar()}" 
+                                                     oncomplete="if(!args.validationFailed){
+                                                     PF('dlg').hide();}" update=":formEdicao :formListagem" />
+                                </f:facet>
+                                <p:outputLabel value="ID" />
+                                <p:inputText value="#{controleAutomovel.obj.id}" />
+                                <p:outputLabel value="Modelo" />
+                                <p:inputText id="ttModelo"  value="#{controleAutomovel.obj.modelo}" 
+                                             size="40" maxlength="40" placeholder="Obrigatório" />                            
+
+                                <p:outputLabel value="Ano" />
+                                <p:inputText id="ttAno"  value="#{controleAutomovel.obj.ano}" 
+                                             size="5" maxlength="4" placeholder="Obrigatório" />  
+
+                                <p:outputLabel value="Km" />
+                                <p:inputText id="ttKm"  value="#{controleAutomovel.obj.quilometragem}" 
+                                             size="100" maxlength="200" placeholder="Obrigatório" >
+
+                                </p:inputText> 
+
+                                <p:outputLabel value="Estado" />
+                                <p:inputText id="ttEstado"  value="#{controleAutomovel.obj.estadoAtual}" 
+                                             size="40" maxlength="40" placeholder="Obrigatório" />  
+                                <p:outputLabel value="Marca" for="selectMarca"/>
+                                <p:selectOneMenu id="selectMarca" value="#{controleAutomovel.obj.marca}" >
+                                    <f:converter converterId="converterMarca" />
+                                    <f:selectItem itemLabel="Selecione um registro" noSelectionOption="true" />
+                                    <f:selectItems value="#{controleAutomovel.daoMarca.listaTodos}" 
+                                                   var="e" itemLabel="#{e.nome}" />              
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+
+                        </div>
+                    </p:tab>
+                    <p:tab title="Reparos">
+                        <p:dataTable value="#{controleAutomovel.obj.reparos}" var="item"
+                                     rowIndexVar="idx" id="listaItens">
+                            <f:facet name="header">
+                                <div align="center">
+                                    <p:commandButton value="Novo Item" actionListener="#{controleAutomovel.novoItem()}"
+                                                     update=":formItem" icon="ui-iconp-plus" id="btoNovoItem" 
+                                                     oncomplete="PF('dlgItem').show();" />
+                                </div>
+                            </f:facet>
+                            <p:column headerText="ID">
+                                <p:outputLabel value="#{item.id}" />
+                            </p:column>
+
+                            <p:column headerText="Automovel">
+                                <p:outputLabel value="#{item.automovel.modelo}" />
+                            </p:column>
+
+
+                            <p:column headerText="Descrição">
+                                <p:outputLabel value="#{item.descricao}" ></p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Descrição">
+                                <p:outputLabel value="#{item.dataReparo}" >
+                                    <f:converter converterId="converterCalendar"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Previsão">
+                                <p:outputLabel value="#{item.previsaoEntrega}" >
+                                    <f:converter converterId="converterCalendar"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Custo">
+                                <p:outputLabel value="#{item.valor}" >
+                                </p:outputLabel>
+                            </p:column>
+
+                            <!--                            <p:column headerText="Valor Unitario">
+                                                            <p:outputLabel value="#{item.valorUnitario}" >
+                                                                <f:convertNumber parent="R$ 0.00"/>
+                                                            </p:outputLabel>
+                                                        </p:column>
+                            
+                            
+                                                        <p:column headerText="Valor Total">
+                                                            <p:outputLabel value="#{item.valorTotal}" >
+                                                                <f:convertNumber parent="R$ 0.00"/>
+                                                            </p:outputLabel>
+                                                        </p:column>-->
+
+                            <p:column headerText="Ações">
+
+                                <p:commandButton id="btnAlterarItem" icon="ui-icon-pencil" actionListener="#{controleAutomovel.alterarItem(idx)}" 
+                                                 process="btnAlterarItem" oncomplete="PF('dlgItem').show();" update=":formItem"  />
+                                <p:commandButton id="btnRemoverItem"  icon="ui-icon-trash" 
+                                                 onclick="if (!confirm('Confirma a exclusão?'))
+                                                             return false"
+                                                 actionListener="#{controleAutomovel.removerItem(idx)}"
+                                                 update=":formListagem:growl listaItens :formEdicao:tab "
+                                                 process="btnRemoverItem"/>
+                                <p:tooltip for="btnAlterarItem" value="Alterar" />
+                                <p:tooltip for="btnRemoverItem" value="Remover" />
+
+                            </p:column>
+                        </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+                <ui:include src="/templates/ajaxstatus.xhtml" />
+            </p:dialog>
+
+            <p:dialog widgetVar="dlgItem" header="Edição do reparo" resizable="false" modal="true" >
+                <h:form id="formItem">
+                    <p:growl />
+                    <p:panelGrid columns="2">
+                        <f:facet name="footer">
+                            <div align="center">
+                                <p:commandButton id="btnAdicionarItem" value="Salvar" icon="ui-icon-disc"
+                                                 actionListener="#{controleAutomovel.salvarItem()}" 
+                                                 update=":formEdicao:tab:listaItens :formItem"
+                                                 process="@form"
+                                                 oncomplete="if(!args.validationFailed){PF('dlgItem').hide();}" />
+                            </div>
+                        </f:facet>
+
+                        <p:outputLabel value="Id reparo" for="txtId"/>
+                        <p:inputText id="txtId" value="#{controleAutomovel.reparoItem.id}" size="10" >
+                        </p:inputText>    
+     
+
+
+                        <p:outputLabel value="Descrição" for="txtDescricao"/>
+                        <p:inputText id="txtDescricao" value="#{controleAutomovel.reparoItem.descricao}" size="10" >
+                            
+                        </p:inputText>    
+
+                        <p:outputLabel value="Valor" for="txtVlr"/>
+                        <p:inputText id="txtVlr" value="#{controleAutomovel.reparoItem.valor}" size="10" />    
+
+                        <p:outputLabel value="Data Reparo" for="txtdata"/>
+                        <p:calendar id="txtdata" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" navigator="true"
+                                    value="#{controleAutomovel.reparoItem.dataReparo}" >
+                            <f:converter converterId="converterCalendar" />
+                        </p:calendar>
+
+                        <p:outputLabel value="Data Previsão" for="txtPrevisao"/>
+                        <p:calendar id="txtPrevisao" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" navigator="true"
+                                    value="#{controleAutomovel.reparoItem.previsaoEntrega}" >
+                            <f:converter converterId="converterCalendar" />
+                        </p:calendar>
+
+
+
+                    </p:panelGrid>
                 </h:form>
                 <ui:include src="/templates/ajaxstatus.xhtml" />
             </p:dialog>

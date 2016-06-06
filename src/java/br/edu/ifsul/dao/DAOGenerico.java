@@ -24,7 +24,7 @@ public class DAOGenerico<T> implements Serializable {
     private String mensagem = "";
     private String ordem = "id";
     private String filtro = "";
-    private Integer maximoObjeto = 3;
+    private Integer maximoObjeto = 10;
     private Integer posicaoAtual = 0;
     private Integer totalObjetos = 0;
 

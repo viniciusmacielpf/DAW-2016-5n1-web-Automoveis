@@ -6,12 +6,13 @@
 package br.edu.ifsul.controle;
 
 
-import br.edu.ifsul.dao.AutomovelDAO;
-import br.edu.ifsul.dao.MarcaDAO;
-import br.edu.ifsul.dao.ReparosDAO;
-import br.edu.ifsul.modelo.Automovel;
-import br.edu.ifsul.modelo.Marca;
+import br.edu.ifsul.dao.CidadeDAO;
+import br.edu.ifsul.dao.PessoaFisicaDAO;
+
+import br.edu.ifsul.modelo.Cidade;
+import br.edu.ifsul.modelo.PessoaFisica;
 import br.edu.ifsul.modelo.Reparos;
+import br.edu.ifsul.modelo.Telefone;
 import br.edu.ifsul.util.Util;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
@@ -21,39 +22,37 @@ import javax.faces.bean.ViewScoped;
  *
  * @author Vini
  */
-@ManagedBean(name = "controleAutomovel")
+@ManagedBean(name = "controlePessoaFisica")
 @ViewScoped
-public class ControleAutomovel implements Serializable {
+public class ControlePessoaFisica implements Serializable {
 
-    private AutomovelDAO<Automovel> dao;
-    private Automovel obj;
-    private MarcaDAO<Marca> daoMarca;
-    private Reparos reparoItem;
-    private Boolean novoReparo;
-
-    public ControleAutomovel() {
-        dao = new AutomovelDAO<>();
-        daoMarca = new MarcaDAO<>();
-    }
-
-    public String listar() {
-
-        return "/privado/automovel/listar?faces-redirect=true";
+    private PessoaFisicaDAO<PessoaFisica> dao;
+    private PessoaFisica obj;
+    private CidadeDAO<Cidade> daoCidade;
+    private Telefone telefones;
+    private Boolean novoTelefone;
+    
+    
+    public ControlePessoaFisica() {
+        dao = new PessoaFisicaDAO<>();
+        daoCidade = new CidadeDAO<>();
+        
     }
     
+    
     public void novoItem(){
-        reparoItem = new Reparos();
-        novoReparo = true;
+        telefones = new Telefone();
+        novoTelefone = true;
     }
     
     public void alterarItem(int index){
-        reparoItem = obj.getReparos().get(index);
-        novoReparo = false;
+        telefones = obj.getTelefones().get(index);
+        novoTelefone = false;
     }
     
     public void salvarItem(){
-        if(novoReparo){
-            obj.addReparos(reparoItem);
+        if(novoTelefone){
+            obj.addTelefone(telefones);
         }else{
             //atualizaValorTotalVenda();
         }
@@ -61,17 +60,23 @@ public class ControleAutomovel implements Serializable {
     }
     
 //    public void calculaValorTotalItem(){
-//        if(reparoItem.getQuantidade() != null && item.getValorUnitario()!= null){
+//        if(telefones.getQuantidade() != null && item.getValorUnitario()!= null){
 //            item.setValorTotal(item.getValorUnitario()*item.getQuantidade());
 //        }
 //    }
     
     public void removerItem(int index){
-        obj.removeReparos(index);
+        obj.removeTelefone(index);
         Util.mensagemInformacao("Objeto removido com sucesso!");
     }
+
+    public String listar() {
+
+        return "/privado/pessoa_fisica/listar?faces-redirect=true";
+    }
+
     public void novo() {
-        obj = new Automovel();
+        obj = new PessoaFisica();
         
     }
 
@@ -116,44 +121,44 @@ public class ControleAutomovel implements Serializable {
         }
     }
 
-    public AutomovelDAO getDao() {
+    public PessoaFisicaDAO getDao() {
         return dao;
     }
 
-    public void setDao(AutomovelDAO dao) {
+    public void setDao(PessoaFisicaDAO dao) {
         this.dao = dao;
     }
 
-    public Automovel getObj() {
+    public PessoaFisica getObj() {
         return obj;
     }
 
-    public void setObj(Automovel obj) {
+    public void setObj(PessoaFisica obj) {
         this.obj = obj;
     }
 
-    public MarcaDAO<Marca> getDaoMarca() {
-        return daoMarca;
+    public CidadeDAO<Cidade> getDaoCidade() {
+        return daoCidade;
     }
 
-    public void setDaoMarca(MarcaDAO<Marca> daoMarca) {
-        this.daoMarca = daoMarca;
+    public void setDaoCidade(CidadeDAO<Cidade> daoCidade) {
+        this.daoCidade = daoCidade;
     }
 
-    public Reparos getReparoItem() {
-        return reparoItem;
+    public Telefone getTelefones() {
+        return telefones;
     }
 
-    public void setReparoItem(Reparos reparoItem) {
-        this.reparoItem = reparoItem;
+    public void setTelefones(Telefone telefones) {
+        this.telefones = telefones;
     }
 
-    public Boolean isNovoReparo() {
-        return novoReparo;
+    public Boolean isNovoTelefone() {
+        return novoTelefone;
     }
 
-    public void setNovoReparo(Boolean novoReparo) {
-        this.novoReparo = novoReparo;
+    public void setNovoTelefone(Boolean novoTelefone) {
+        this.novoTelefone = novoTelefone;
     }
 
  
