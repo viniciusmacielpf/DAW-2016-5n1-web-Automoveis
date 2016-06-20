@@ -148,17 +148,17 @@
                             </div>
                         </p:tab>
                         <p:tab title="Telefones" >
-                            <p:dataTable value="#{controlePassoaFisica.obj.telefone}" var="item"
+                            <p:dataTable value="#{controlePessoaFisica.obj.telefones}" var="item"
                                          rowIndexVar="idx" id="listaItens">
                                 <f:facet name="header">
                                     <div align="center">
-                                        <p:commandButton value="Novo Item" actionListener="#{controlePassoaFisica.novoItem()}"
+                                        <p:commandButton value="Novo Item" actionListener="#{controlePessoaFisica.novoItem()}"
                                                          update=":formItem" icon="ui-iconp-plus" id="btoNovoItem" 
                                                          oncomplete="PF('dlgItem').show();" />
                                     </div>
                                 </f:facet>
                                 <p:column headerText="ID">
-                                    <p:outputLabel value="#{telefone.id}" />
+                                    <p:outputLabel value="#{item.id}" />
                                 </p:column>
 
                                 <p:column headerText="Quantidade">
@@ -175,13 +175,13 @@
 
                                 <p:column headerText="Ações">
 
-                                    <p:commandButton id="btnAlterarItem" icon="ui-icon-pencil" actionListener="#{controlePassoaFisica.alterarItem(idx)}" 
+                                    <p:commandButton id="btnAlterarItem" icon="ui-icon-pencil" actionListener="#{controlePessoaFisica.alterarItem(idx)}" 
                                                      process="btnAlterarItem" oncomplete="PF('dlgItem').show();" update=":formItem"  />
                                     <p:commandButton id="btnRemoverItem"  icon="ui-icon-trash" 
                                                      onclick="if (!confirm('Confirma a exclusão?'))
                                                                  return false"
-                                                     actionListener="#{controlePassoaFisica.removerItem(idx)}"
-                                                     update=":formListagem:growl listaItens :formEdicao:tab:txtValorTotal"
+                                                     actionListener="#{controlePessoaFisica.removerItem(idx)}"
+                                                     update=":formListagem:growl listaItens"
                                                      process="btnRemoverItem"/>
                                     <p:tooltip for="btnAlterarItem" value="Alterar" />
                                     <p:tooltip for="btnRemoverItem" value="Remover" />
@@ -202,7 +202,7 @@
                         <f:facet name="footer">
                             <div align="center">
                                 <p:commandButton id="btnAdicionarItem" value="Salvar" icon="ui-icon-disc"
-                                                 actionListener="#{controlePassoaFisica.salvarItem()}" 
+                                                 actionListener="#{controlePessoaFisica.salvarItem()}" 
                                                  update=":formEdicao:tab:listaItens :formItem :formEdicao:tab"
                                                  process="@form"
                                                  oncomplete="if(!args.validationFailed){PF('dlgItem').hide();}" />

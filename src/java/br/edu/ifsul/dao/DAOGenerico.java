@@ -69,6 +69,7 @@ public class DAOGenerico<T> implements Serializable {
     }
 
     public T localizar(Integer id) {
+        
         return (T) em.find(classePersistente, id);
     }
 
